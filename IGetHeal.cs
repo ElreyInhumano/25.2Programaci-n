@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace _25._2Ejercicios
 {
-    class Program
+    interface IGetHeal
     {
-        static void Main(string[] args)
-        {
-            Game game = new Game();
-            game.StartGame();
-        }
+        int GetHeal(int heal);
     }
 }

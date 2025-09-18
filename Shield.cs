@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace _25._2Ejercicios
 {
-    class Program
+    class Shield :Item
     {
-        static void Main(string[] args)
+        protected Shield(string itemName, string itemType) : base(itemName, itemType)
         {
-            Game game = new Game();
-            game.StartGame();
         }
     }
 }

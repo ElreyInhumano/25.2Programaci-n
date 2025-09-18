@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace _25._2Ejercicios
 {
-    class Program
+    abstract class Potion : Item
     {
-        static void Main(string[] args)
+        protected Potion(string itemName, string itemType) : base(itemName, itemType)
         {
-            Game game = new Game();
-            game.StartGame();
         }
     }
 }
