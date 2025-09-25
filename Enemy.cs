@@ -21,6 +21,6 @@ namespace _25._2Ejercicios
             this.life = life;
         }
 
-        public abstract int GetDamage(int dmg);
+        public abstract void ReceiveDamage(int dmg);
     }
 }

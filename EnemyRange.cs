@@ -12,9 +12,9 @@ namespace _25._2Ejercicios
         {
 
         }
-        public override int GetDamage(int dmg)
+        public override void ReceiveDamage(int dmg)
         {
-            return life - dmg;
+            life -= dmg;
         }
     }
 }

@@ -8,6 +8,6 @@ namespace _25._2Ejercicios
 {
     interface IGetDamage
     {
-        int GetDamage(int dmg);
+        void ReceiveDamage(int dmg);
     }
 }

@@ -28,9 +28,9 @@ namespace _25._2Ejercicios
         {
             return instance;
         }
-        public int GetDamage(int dmg)
+        public void ReceiveDamage(int dmg)
         {
-            return life - dmg;
+            life -= dmg;
         }
         public int GetHeal(int heal)
         {

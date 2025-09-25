@@ -19,12 +19,15 @@ namespace _25._2Ejercicios
         private static int life;
         private static int dmg;
         private static string item;
-        private static Player player = new Player(name,life, dmg, item);
+        private static Player player = new Player(name,life,dmg,item);
         Func<int, int> setPlayerLife, setPlayerDmg;
         Func<string, string> setPlayerName, playerItem;
         Func<string> playerName;
         Func<int> playerLife, playerDmg;
+        Action<int> playerReceiveDmg;
         private int stages, stage;
+        private int enemyType, enemyLife, enemyWeapon;
+        private string itemEnemy;
         private List<Enemy> list = new List<Enemy>();
         private List<Item> listItems = new List<Item>();
         public void StartGame()
@@ -35,10 +38,44 @@ namespace _25._2Ejercicios
         }
         public void SetGame()
         {
-            Console.WriteLine("Introduzca a los enemigos");
-            AddEnemiesToList();
             Console.WriteLine("Introduzca la cantidad de stages");
             stages = int.Parse(Console.ReadLine());
+            Console.WriteLine("Introduzca a los enemigos");
+            for(int i = 1; i <= stages; i++)
+            {
+                Console.WriteLine($"Enemigo {i}");
+                Console.WriteLine("Introduzca su tipo");
+                enemyType = int.Parse(Console.ReadLine());
+                Console.WriteLine("Introduzca su item");
+                itemEnemy = Console.ReadLine();
+                Console.WriteLine("Introduzca su vida");
+                enemyLife = int.Parse(Console.ReadLine());
+                Console.WriteLine("Introduzca su arma");
+                enemyWeapon = int.Parse(Console.ReadLine());
+                switch (enemyType)
+                {
+                    case 1:
+                        switch (enemyWeapon)
+                        {
+                            case 1:
+                                AddEnemiesToList(itemEnemy, axe, enemyLife);
+                                Console.WriteLine($"Enemigo añadido");
+                                break;
+                        }
+                        break;
+                    case 2:
+                        switch (enemyWeapon)
+                        {
+                            case 1:
+                                AddEnemiesToList(itemEnemy, pistol, enemyLife);
+                                Console.WriteLine($"Enemigo añadido");
+                                break;
+                        }
+                        break;
+                }
+                
+            }
+            
             stage = 1;
             CreatePlayer();
             if (playerLife() > 0)
@@ -74,23 +111,31 @@ namespace _25._2Ejercicios
                         string option = Console.ReadLine();
                         if(option == "atacar")
                         {
-                            enemy.GetDamage(playerDmg());
+                            enemy.ReceiveDamage(playerDmg());
+                            Console.WriteLine($"Has hecho {playerDmg()} de daño");
+                            Console.WriteLine($"Enemigo tiene {enemy.life} de vida");
                             action = true;
                         }
                         if (option == "item")
                         {
                             if(listItems.Count > 0)
                             {
-                                
+                                Console.WriteLine($"Has usado un item");
                                 action = true;
                             }
-                        }
-                        if(enemy.life <= 0)
-                        {
-                            Console.WriteLine("Enemigo eliminado");
-                            list.RemoveAt(0);
-                            stage++;
-                        }
+                        }                        
+                    }
+                    if (enemy.life <= 0)
+                    {
+                        Console.WriteLine("Enemigo eliminado");
+                        list.RemoveAt(0);
+                        stage++;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Es el turno del enemigo y este te ataca");
+                        playerReceiveDmg(enemy.weapon.dmg);
+                        Console.WriteLine($"Te queda {playerLife()} de vida");
                     }
                 }
             }
@@ -105,18 +150,34 @@ namespace _25._2Ejercicios
             Console.WriteLine("Felicidades ganaste el juego");
             Console.ReadLine();
         }
-        void AddEnemiesToList()
+        void AddEnemiesToList(string item, Weapon weapon, int life)
         {
-            list.Add(enemyRange1);
-            list.Add(enemyMelee1);
-            list.Add(enemyMelee2);
+            string enemyType;
+            switch (this.enemyType)
+            {
+                case 1:
+                    enemyType = "melee";
+                    Enemy enemyMelee = new EnemyMelee(enemyType, item, weapon, life);
+                    list.Add(enemyMelee);
+                    break;
+                case 2:
+                    enemyType = "range";
+                    Enemy enemyRange = new EnemyRange(enemyType, item, weapon, life);
+                    list.Add(enemyRange);
+                    break;
+            }
         }
         public void EnemyChange()
         {
-            switch (stage)
+            enemy = list[0];
+            Console.WriteLine(enemy.type);
+            Console.WriteLine(enemy.life);
+
+            /*switch (stage)
             {
                 case 1:
                     enemy = enemyMelee1;
+                    Console.WriteLine(enemy);
                     break;
                 case 2:
                     enemy = enemyRange1;
@@ -127,11 +188,12 @@ namespace _25._2Ejercicios
                 default:
                     enemy = enemyMelee1;
                     break;
-            }
+            }*/
         }
         public string ShowInfoEnemy()
         {
-            switch (stage)
+            return ShowInfoEnemies();
+            /*switch (stage)
             {
                 case 1:
                     return ShowInfoEnemy1();
@@ -141,11 +203,11 @@ namespace _25._2Ejercicios
                     return ShowInfoEnemy3();
                 default:
                     return ShowInfoEnemy1();
-            }
+            }*/
         }
-        public string ShowInfoEnemy1()
+        public string ShowInfoEnemies()
         {
-            return $"tiene {enemyMelee1.life} de vida y su hacha hace {enemyMelee1.weapon.dmg} de daño";
+            return $"tiene {enemy.life} de vida y su arma hace {enemy.weapon.dmg} de daño";
         }
         public string ShowInfoEnemy2()
         {
@@ -164,6 +226,7 @@ namespace _25._2Ejercicios
             setPlayerName = Player.GetPlayerInstance().SetName;
             playerName = Player.GetPlayerInstance().GetName;
             playerItem = Player.GetPlayerInstance().SetItem;
+            playerReceiveDmg = Player.GetPlayerInstance().ReceiveDamage;
         }
         void CreatePlayer()
         {
@@ -182,6 +245,7 @@ namespace _25._2Ejercicios
                 }
                 else
                 {
+                    //player = new Player(playerName(), playerLife(), playerDmg(), item);
                     pjCreated = true;
                 }
             }
